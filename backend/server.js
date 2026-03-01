@@ -53,13 +53,15 @@ app.use("/api/analytics", analyticsRoutes);
 // AI ChatBot
 app.use("/api/chat", chatRoutes);
 
-// Serve the frontend in production
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// Serve the frontend in production (only if built locally — skip when frontend is a separate service)
+import fs from "fs";
+const frontendDist = path.join(__dirname, "/frontend/dist");
+if (process.env.NODE_ENV === "production" && fs.existsSync(frontendDist)) {
+    app.use(express.static(frontendDist));
 
     // Catch-all route to serve the React app for any unmatched routes
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+        res.sendFile(path.resolve(frontendDist, "index.html"));
     });
 }
 
