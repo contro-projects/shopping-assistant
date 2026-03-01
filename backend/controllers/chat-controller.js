@@ -152,14 +152,18 @@ export const chat = async (req, res) => {
             { role: "assistant", content: streamedMessage },
         ]);
     } catch (error) {
-        console.error("Error in chat controller:", error.message);
+        console.error("Error in chat controller:", error.message, error.stack);
+        const debugMsg = process.env.NODE_ENV === "production"
+            ? error.message
+            : error.stack;
         if (!res.headersSent) {
             return res.status(500).json({
                 message: "Sorry, I'm having trouble right now. Please try again in a moment.",
+                error: debugMsg,
                 products: [],
             });
         }
-        sendSSE(res, "error", { message: "Sorry, I'm having trouble right now. Please try again in a moment." });
+        sendSSE(res, "error", { message: "Sorry, I'm having trouble right now. Please try again in a moment.", error: debugMsg });
         res.end();
     }
 };
