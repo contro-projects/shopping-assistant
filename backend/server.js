@@ -53,6 +53,11 @@ app.use("/api/analytics", analyticsRoutes);
 // AI ChatBot
 app.use("/api/chat", chatRoutes);
 
+// Health check
+app.get("/", (req, res) => {
+    res.json({ status: "ok", message: "API is running" });
+});
+
 // Serve the frontend in production (only if built locally — skip when frontend is a separate service)
 import fs from "fs";
 const frontendDist = path.join(__dirname, "/frontend/dist");
