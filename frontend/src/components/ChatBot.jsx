@@ -175,7 +175,9 @@ export default function ChatBot() {
         setLoading(true);
 
         try {
-            const response = await fetch("/api/chat", {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "");
+            const chatUrl = backendUrl ? `${backendUrl}/api/chat` : "/api/chat";
+            const response = await fetch(chatUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
